@@ -13,7 +13,7 @@ server.use(express.static(path.join(__dirname, 'back-for-test-app')));
 bot.onText(/help/, msg =>
   bot.sendMessage(
     msg.from.id,
-    'This bot implements a flappy bird jumping game. Say /game if you want to play.'
+    'This bot implements a flappy bird jumping game. Say /start if you want to play.'
   )
 );
 bot.onText(/start|game/, msg => bot.sendGame(msg.from.id, gameName));
@@ -32,6 +32,7 @@ bot.on('callback_query', function (query) {
     });
   }
 });
+
 bot.on('inline_query', function (iq) {
   bot.answerInlineQuery(iq.id, [
     {
