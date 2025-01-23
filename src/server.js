@@ -9,8 +9,10 @@ import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import cookieParser from 'cookie-parser';
+import axios from 'axios';
 
 const PORT = Number(env('PORT', '3000'));
+const APP_DOMAIN = env('APP_DOMAIN');
 
 export const startServer = () => {
   const app = express();
@@ -37,14 +39,32 @@ export const startServer = () => {
   bot.onText(/help/, msg =>
     bot.sendMessage(
       msg.from.id,
-      'This bot implements a flappy bird jumping game. Say /start if you want to play.'
+      'This bot implements a flappy bird jumping game. Say /start if you want to enter your solana wallet address, /game if you want to play.'
     )
   );
-  bot.onText(/start|game/, msg => {
+  bot.onText(/start/, msg =>
+    bot.sendMessage(
+      msg.from.id,
+      'Please enter your solana wallet address. Say /game if you want to play.'
+    )
+  );
+  bot.on('message', msg => {
+    const chatId = msg.chat.id;
+    const text = msg.text;
+
+    // Обрабатываем только те сообщения, которые не являются командами
+    if (text && !text.startsWith('/')) {
+      // Здесь вы можете обработать введенные данные
+      console.log(`Received message from user: ${text}`);
+
+      // Например, отправляем подтверждение обратно пользователю
+      bot.sendMessage(chatId, `Your solana wallet : ${text}`);
+    }
+  });
+
+  bot.onText(/game/, msg => {
     bot.sendGame(msg.from.id, gameName);
     username = msg.from.username;
-    console.log(`Пользователь: ${username}`);
-    bot.sendGame(msg.from.id, gameName);
   });
   bot.on('callback_query', function (query) {
     if (query.game_short_name !== gameName) {
@@ -54,7 +74,7 @@ export const startServer = () => {
       );
     } else {
       queries[query.id] = query;
-      let gameurl = 'https://test-app-omega-indol.vercel.app/';
+      let gameurl = APP_DOMAIN;
       bot.answerCallbackQuery({
         callback_query_id: query.id,
         url: gameurl,
@@ -71,39 +91,39 @@ export const startServer = () => {
       },
     ]);
   });
-  app.get('/highscore/:score', function (req, res, next) {
-    if (!Object.hasOwnProperty.call(queries, req.query.id)) return next();
-    let query = queries[req.query.id];
-    let options;
-    if (query.message) {
-      options = {
-        chat_id: query.message.chat.id,
-        message_id: query.message.message_id,
-      };
-    } else {
-      options = {
-        inline_message_id: query.inline_message_id,
-      };
-    }
-    bot.setGameScore(
-      query.from.id,
-      parseInt(req.params.score),
-      options,
-      function (err, result) {}
-    );
+  app.post('/sendScore', function (req, res, next) {
+    console.log(req.body);
+    axios
+      .post('https://ti1.ngrok.io/submit_score', req.body)
+      .then(response => {
+        // console.log(response.data);
+        res.send('Score submitted successfully!');
+      })
+      .catch(error => {
+        // console.error(error);
+        res.status(500).send('Error submitting score, please try again');
+      });
+    // if (!Object.hasOwnProperty.call(queries, req.query.id)) return next();
+    // let query = queries[req.query.id];
+
+    // let options;
+    // if (query.message) {
+    //   options = {
+    //     chat_id: query.message.chat.id,
+    //     message_id: query.message.message_id,
+    //   };
+    // } else {
+    //   options = {
+    //     inline_message_id: query.inline_message_id,
+    //   };
+    // }
+    // bot.setGameScore(
+    //   query.from.id,
+    //   parseInt(req.params.score),
+    //   options,
+    //   function (err, result) {}
+    // );
   });
-  app.get('/asd', () => console.log('pes asd'));
-  app.post('/sendLocalStorageValue', (req, res) => {
-    // console.log(req._read);
-    const userValue = req.body.value;
-
-    console.log(`${username}: ${userValue}`);
-
-    // Здесь вы можете обработать полученное значение по своему усмотрению
-    res.json({ message: `${username} Value received successfully` });
-  });
-
-  // app.use(router);
 
   app.use('*', notFoundHandler);
 
