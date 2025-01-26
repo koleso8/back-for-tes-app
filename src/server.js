@@ -9,7 +9,6 @@ import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import cookieParser from 'cookie-parser';
-import axios from 'axios';
 
 const PORT = Number(env('PORT', '3000'));
 const APP_DOMAIN = env('APP_DOMAIN');
@@ -77,7 +76,7 @@ export const startServer = () => {
       },
     ]);
   });
-  app.post('/sendScore', function (req, res, next) {
+  app.post('/', function (req, res, next) {
     console.log(req.body);
   });
 
