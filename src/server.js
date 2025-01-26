@@ -12,6 +12,7 @@ import cookieParser from 'cookie-parser';
 
 const PORT = Number(env('PORT', '3000'));
 const APP_DOMAIN = env('APP_DOMAIN');
+const GAME_NAME = env('GAME_NAME');
 
 export const startServer = () => {
   const app = express();
@@ -33,7 +34,7 @@ export const startServer = () => {
     polling: true,
   });
 
-  const gameName = 'testststs';
+  const gameName = GAME_NAME;
   const queries = {};
   bot.onText(/help|info/, msg =>
     bot.sendMessage(
