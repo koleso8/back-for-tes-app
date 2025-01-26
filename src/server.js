@@ -13,6 +13,7 @@ import cookieParser from 'cookie-parser';
 const PORT = Number(env('PORT', '3000'));
 const APP_DOMAIN = env('APP_DOMAIN');
 const GAME_NAME = env('GAME_NAME');
+const TOKEN = env('TOKEN');
 
 export const startServer = () => {
   const app = express();
@@ -28,7 +29,6 @@ export const startServer = () => {
       message: 'Fart now!',
     });
   });
-  const TOKEN = env('TOKEN');
 
   const bot = new TelegramBot(TOKEN, {
     polling: true,
@@ -46,7 +46,7 @@ export const startServer = () => {
     bot.sendMessage(
       msg.from.id,
 
-      `Hi ${msg.from.username}. Say /game or /play if you want to play.`
+      `Hi ${msg.from.first_name}. Say /game or /play if you want to play.`
     )
   );
   bot.onText(/game|play/, msg => {
