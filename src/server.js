@@ -78,17 +78,17 @@ export const startServer = () => {
     ]);
   });
 
-  app.post('/', function (req, res) {
-    try {
-      console.log(req.body);
-      res.json({
-        message: `Score : ${req.body.score} , Wallet_Id : ${req.body.wallet_id}`,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
+  // app.post('/', function (req, res) {
+  //   try {
+  //     console.log(req.body);
+  //     res.json({
+  //       message: `Score : ${req.body.score} , Wallet_Id : ${req.body.wallet_id}`,
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send('Internal Server Error');
+  //   }
+  // });
 
   app.use('*', notFoundHandler);
 
