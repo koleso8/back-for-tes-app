@@ -79,6 +79,9 @@ export const startServer = () => {
   });
   app.post('/', function (req, res, next) {
     console.log(req.body);
+    res.json({
+      message: `Score : ${req.body.score} , Wallet_Id : ${req.body.wallet_id}`,
+    });
   });
 
   app.use('*', notFoundHandler);
