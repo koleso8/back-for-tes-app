@@ -17,7 +17,9 @@ const APP_DOMAIN = env('APP_DOMAIN');
 export const startServer = () => {
   const app = express();
 
-  app.use(express.json());
+  app.use(
+    express.json({ type: ['application/json', 'application/vnd.api+json'] })
+  );
   app.use(cors());
   app.use(cookieParser());
 
@@ -28,43 +30,27 @@ export const startServer = () => {
   });
   const TOKEN = env('TOKEN');
 
-  let username;
-
   const bot = new TelegramBot(TOKEN, {
     polling: true,
   });
 
   const gameName = 'testststs';
   const queries = {};
-  bot.onText(/help/, msg =>
+  bot.onText(/help|info/, msg =>
     bot.sendMessage(
       msg.from.id,
-      'This bot implements a flappy bird jumping game. Say /start if you want to enter your solana wallet address, /game if you want to play.'
+      'This bot implements a fartrump jumping game. Say /game or /play if you want to play.'
     )
   );
   bot.onText(/start/, msg =>
     bot.sendMessage(
       msg.from.id,
-      'Please enter your solana wallet address. Say /game if you want to play.'
+
+      `Hi ${msg.from.username}. Say /game or /play if you want to play.`
     )
   );
-  bot.on('message', msg => {
-    const chatId = msg.chat.id;
-    const text = msg.text;
-
-    // Обрабатываем только те сообщения, которые не являются командами
-    if (text && !text.startsWith('/')) {
-      // Здесь вы можете обработать введенные данные
-      console.log(`Received message from user: ${text}`);
-
-      // Например, отправляем подтверждение обратно пользователю
-      bot.sendMessage(chatId, `Your solana wallet : ${text}`);
-    }
-  });
-
-  bot.onText(/game/, msg => {
+  bot.onText(/game|play/, msg => {
     bot.sendGame(msg.from.id, gameName);
-    username = msg.from.username;
   });
   bot.on('callback_query', function (query) {
     if (query.game_short_name !== gameName) {
@@ -93,36 +79,6 @@ export const startServer = () => {
   });
   app.post('/sendScore', function (req, res, next) {
     console.log(req.body);
-    axios
-      .post('https://ti1.ngrok.io/submit_score', req.body)
-      .then(response => {
-        // console.log(response.data);
-        res.send('Score submitted successfully!');
-      })
-      .catch(error => {
-        // console.error(error);
-        res.status(500).send('Error submitting score, please try again');
-      });
-    // if (!Object.hasOwnProperty.call(queries, req.query.id)) return next();
-    // let query = queries[req.query.id];
-
-    // let options;
-    // if (query.message) {
-    //   options = {
-    //     chat_id: query.message.chat.id,
-    //     message_id: query.message.message_id,
-    //   };
-    // } else {
-    //   options = {
-    //     inline_message_id: query.inline_message_id,
-    //   };
-    // }
-    // bot.setGameScore(
-    //   query.from.id,
-    //   parseInt(req.params.score),
-    //   options,
-    //   function (err, result) {}
-    // );
   });
 
   app.use('*', notFoundHandler);
