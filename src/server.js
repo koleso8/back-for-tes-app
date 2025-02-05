@@ -46,8 +46,7 @@ export const startServer = () => {
     bot.sendMessage(
       msg.from.id,
 
-      `Hi ${msg.from.first_name}. Say /game if you want to play.
-      Welcome to FARTRUMP EARN GAME!
+      `Welcome to FARTRUMP EARN GAME!
 
 Rules are as simple as farting:
 
@@ -69,6 +68,8 @@ Also more $TGAME tokens you hold - higher Fart Multiplier you had!
 1kk-2kk hodl - x3.0
 2-5kk hodl - x5.0
 5kk+ hodl - x10.0
+
+${msg.from.first_name}. Say /game if you want to play.
 `
     )
   );
