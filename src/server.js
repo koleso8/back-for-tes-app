@@ -39,17 +39,17 @@ export const startServer = () => {
   bot.onText(/help|info/, msg =>
     bot.sendMessage(
       msg.from.id,
-      'This bot implements a fartrump jumping game. Say /game or /play if you want to play.'
+      'This bot implements a fartrump jumping game. Say /game if you want to play.'
     )
   );
   bot.onText(/start/, msg =>
     bot.sendMessage(
       msg.from.id,
 
-      `Hi ${msg.from.first_name}. Say /game or /play if you want to play.`
+      `Hi ${msg.from.first_name}. Say /game if you want to play.`
     )
   );
-  bot.onText(/game|play/, msg => {
+  bot.onText(/game/, msg => {
     bot.sendGame(msg.from.id, gameName);
   });
   bot.on('callback_query', function (query) {
