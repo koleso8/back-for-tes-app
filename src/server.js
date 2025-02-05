@@ -46,7 +46,30 @@ export const startServer = () => {
     bot.sendMessage(
       msg.from.id,
 
-      `Hi ${msg.from.first_name}. Say /game if you want to play.`
+      `Hi ${msg.from.first_name}. Say /game if you want to play.
+      Welcome to FARTRUMP EARN GAME!
+
+Rules are as simple as farting:
+
+You need to score at least 20 points to win.
+20-29 points - 0.005 SOL
+30-39 points - 0.010 SOL
+40-49 points - 0.015 SOL
+50-59 points - 0.020 SOL
+60-69 points - 0.025 SOL
+70-79 points - 0.030 SOL
+80-89 points - 0.035 SOL
+90-99 points - 0.040 SOL
+100+ points - 0.050 SOL
+
+Also more $TGAME tokens you hold - higher Fart Multiplier you had!
+100-300k hodl - x1.3
+400-500k hodl - x1.5
+500k-1kk hodl - x2.0
+1kk-2kk hodl - x3.0
+2-5kk hodl - x5.0
+5kk+ hodl - x10.0
+`
     )
   );
   bot.onText(/game/, msg => {
